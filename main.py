@@ -33,16 +33,25 @@ while True:
 
             shift =  (event.pos[0] - next_step[0], event.pos[1] - next_step[1])
 
+
+
             if sum(shift) < 100:
-    
+
                 if green_player:
-                    if abs(green_payer_coordinate[0] - next_step[0]) + abs(green_payer_coordinate[1] - next_step[1]) < 200:
-                        green_payer_coordinate = next_step
-                        green_player = False
+                    coordinate = green_payer_coordinate
                 else:
-                    if abs(red_payer_coordinate[0] - next_step[0]) + abs(red_payer_coordinate[1] - next_step[1]) < 200:
+                    coordinate = red_payer_coordinate
+
+                road = (abs((coordinate[0] - next_step[0])/2 + coordinate[0]), abs((coordinate[1] - next_step[1])/2 + coordinate[1]))
+
+                if abs(coordinate[0] - next_step[0]) + abs(coordinate[1] - next_step[1]) < 200 and road not in walls:
+                    if green_player:
+                        green_payer_coordinate = next_step
+                    else:
                         red_payer_coordinate = next_step
-                        green_player = True
+                
+                    green_player = not green_player
+                
             
             elif shift[0] > shift[1]:
                 walls.append((event.pos[0]//50 * 50, event.pos[1]//50 * 50))
