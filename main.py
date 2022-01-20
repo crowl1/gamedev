@@ -29,11 +29,11 @@ while True:
 
             
             if green_player:
-                if abs(green_payer_coordinate[0] - next_step[0]) == 100 or abs(green_payer_coordinate[1] - next_step[1]) == 100:
+                if abs(green_payer_coordinate[0] - next_step[0]) + abs(green_payer_coordinate[1] - next_step[1]) < 200:
                     green_payer_coordinate = next_step
                     green_player = False
             else:
-                if abs(red_payer_coordinate[0] - next_step[0]) == 100 or abs(red_payer_coordinate[1] - next_step[1]) == 100:
+                if abs(red_payer_coordinate[0] - next_step[0]) + abs(red_payer_coordinate[1] - next_step[1]) < 200:
                     red_payer_coordinate = next_step
                     green_player = True
                 
