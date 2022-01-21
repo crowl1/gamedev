@@ -5,6 +5,7 @@ import random
 from betterconf import Config, field
 
 from settings import *
+from neural_network import outputs
 
 
 class GameConfig(Config):
@@ -18,6 +19,7 @@ cfg = GameConfig()
 pygame.init()
 win = pygame.display.set_mode((X_FIELD, Y_FIELD))
 pygame.display.set_caption('Andrii Dovgalyuk')
+
 
 def reset():
     cfg.green_player = GREEN_PLAYER_DEFAULT
@@ -44,8 +46,12 @@ def game():
 
                 
                 pos = event.pos
+
                 if cfg.game_mode == 1 and not cfg.green_player:
                     pos = (cfg.red_player_coordinate[0] + random.randint(-100,101), cfg.red_player_coordinate[1] + random.randint(-100,101))
+                elif cfg.game_mode == 0 and not cfg.green_player:
+                    outputs_list = outputs.tolist()
+                    pos = (cfg.red_player_coordinate[0] - (outputs_list[0][0] + outputs_list[1][0]) * 100, cfg.red_player_coordinate[1] - (outputs_list[2][0] + outputs_list[3][0]) * 100)
                 
                 next_step = (pos[0]//100 * 100, pos[1]//100 * 100)
 
@@ -63,7 +69,7 @@ def game():
 
                     road = (abs((coordinate[0] - next_step[0])/2 + coordinate[0]), abs((coordinate[1] - next_step[1])/2 + coordinate[1]))
 
-                    if abs(coordinate[0] - next_step[0]) + abs(coordinate[1] - next_step[1]) < 200 and road not in walls:
+                    if abs(coordinate[0] - next_step[0]) + abs(coordinate[1] - next_step[1]) <= 200 and road not in walls:
                         if cfg.green_player:
                             cfg.green_player_coordinate = next_step
                         else:
@@ -93,6 +99,9 @@ def game():
 
                 elif event.key == pygame.K_1:
                     cfg.game_mode = 1
+                
+                elif event.key == pygame.K_0:
+                    cfg.game_mode = 0
                 
                 reset()
                 walls = []
