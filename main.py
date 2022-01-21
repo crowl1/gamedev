@@ -6,6 +6,7 @@ from betterconf import Config, field
 
 from settings import *
 from neural_network import outputs
+from model import Player
 
 
 class GameConfig(Config):
@@ -15,6 +16,9 @@ class GameConfig(Config):
     red_player_coordinate = field(default = RED_PLAYER_COORDINATE_DEFAULT)
 
 cfg = GameConfig()
+
+green_player = Player(GREEN_PLAYER_COORDINATE_DEFAULT[0] , GREEN_PLAYER_COORDINATE_DEFAULT[1])
+green_player = Player(RED_PLAYER_COORDINATE_DEFAULT[0] , RED_PLAYER_COORDINATE_DEFAULT[1])
 
 pygame.init()
 win = pygame.display.set_mode((X_FIELD, Y_FIELD))
@@ -27,11 +31,23 @@ def reset():
     cfg.red_player_coordinate = RED_PLAYER_COORDINATE_DEFAULT
 
 
+def check_win():
+    if cfg.green_player_coordinate[1] >= Y_FIELD - 2 * HEIGHT:
+        print('Зелений виграв')
+        sys.exit()
+    elif cfg.red_player_coordinate[1] <= HEIGHT:
+        print('Червоний виграв')
+        sys.exit()
+
+
 def game():
     walls = []
 
     while True:
         pygame.time.delay(100)
+
+        check_win()
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -88,8 +104,6 @@ def game():
                     walls.append((pos[0]//50 * 50 + 50, pos[1]//50 * 50))
                     cfg.green_player = not cfg.green_player
                 
-
-                print(event.pos, next_step, shift, coordinate, cfg.green_player)
             
 
             elif event.type == pygame.KEYDOWN:
